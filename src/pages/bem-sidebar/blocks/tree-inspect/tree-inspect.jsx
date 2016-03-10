@@ -21,8 +21,8 @@ class TreeInspect extends React.Component {
         if (label) {
             if (Object.keys(data).length) {
                 return (
-                    <li className="tree-inspect__item">
-                        <span className="tree-inspect__label tree-inspect__label_type_object">
+                    <li className="tree-inspect__item tree-inspect__item_type_object">
+                        <span className="tree-inspect__label">
                             <i className={"tree-inspect__collapse-toggle  tree-inspect__collapse-toggle_collapsed_" + (self.state.collapsed ? 'yes' : 'no')} onClick={self.onCollapseToggle.bind(self)}></i>
                             {label}
                         </span>

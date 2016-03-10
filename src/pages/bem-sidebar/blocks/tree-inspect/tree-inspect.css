@@ -6,6 +6,12 @@
 
 .tree-inspect__item {
     margin: 2px;
+    display: flex;
+    word-break: break-all;
+}
+
+.tree-inspect__item_type_object {
+    display: block;
 }
 
 .tree-inspect__label {
@@ -13,6 +19,7 @@
     position: relative;
     padding-left: 11px;
     box-sizing: border-box;
+    flex: 0 0 auto;
 }
 
 .tree-inspect__collapse-toggle {
@@ -50,5 +57,5 @@
 }
 
 .tree-inspect__value {
-    word-wrap: break-word;
+    flex: 1 1 auto;
 }
