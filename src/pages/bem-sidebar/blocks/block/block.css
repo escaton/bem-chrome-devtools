@@ -1,0 +1,20 @@
+@import url(../tree-inspect/tree-inspect.css);
+
+.block {
+    margin-bottom: 15px;
+}
+
+.block__name {
+    font-weight: normal;
+    background: #f3f3f3;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ccc;
+    display: block;
+    box-sizing: border-box;
+    padding: 2px 10px;
+}
+
+.block__details {
+    margin: 8px;
+    padding: 0;
+}

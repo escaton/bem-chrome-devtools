@@ -1,0 +1,54 @@
+.tree-inspect {
+    color: rgb(48, 57, 66);
+    padding: 0;
+    list-style-type: none;
+}
+
+.tree-inspect__item {
+    margin: 2px;
+}
+
+.tree-inspect__label {
+    margin-right: 5px;
+    position: relative;
+    padding-left: 11px;
+    box-sizing: border-box;
+}
+
+.tree-inspect__collapse-toggle {
+    border: 4px solid transparent;
+    height: 0px;
+    width: 0px;
+    display: inline-block;
+    border-left-color: #777;
+    border-width: 4px 7px;
+    position: absolute;
+    left: 0px;
+    top: 3px;
+}
+
+.tree-inspect__collapse-toggle_collapsed_no {
+    transform: rotate(90deg);
+    transform-origin: 25% 50%;
+}
+
+.tree-inspect__inner {
+    margin: 0 10px;
+}
+
+.tree-inspect__inner_collapsed_yes {
+    display: none;
+}
+
+.tree-inspect__label_type_primitive {
+    color: rgb(136, 19, 145);
+}
+
+.tree-inspect__label_type_primitive:after {
+    content: ':';
+    color: rgb(48, 57, 66);
+}
+
+.tree-inspect__value {
+    word-wrap: break-word;
+}
