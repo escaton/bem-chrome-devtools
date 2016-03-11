@@ -1,13 +1,13 @@
 ###BEM devtools
 
-Right now it supports only inspecting `js params`
+Right now it supports inspecting Block `js params` and `mods`
 
 ####Start
 ```
 npm i
-gulp build
+gulp watch
 ```
-Then [load extension](https://developer.chrome.com/extensions/getstarted#unpacked)
-![Open in separate devtools](/assets/how-to-2.png?raw=true "Open in separate devtools")
-`cmd+alt+i`
-Hack it :)
+ - [load extension](https://developer.chrome.com/extensions/getstarted#unpacked) (select `src` folder, which contains `manifest.json`)
+ - open devtools in separate window and `cmd+alt+i` if you want to debug it
+![Open devtools in separate window](/assets/separate-window.png?raw=true)
+ - Hack it :)
