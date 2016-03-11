@@ -18,8 +18,11 @@
     "glob": "^7.0.3",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
+    "gulp-util": "^3.0.7",
+    "minimist": "^1.2.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
   }
 }
