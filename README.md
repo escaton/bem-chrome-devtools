@@ -2,6 +2,8 @@
 
 Right now it supports inspecting Block `js params` and `mods`
 
+[Chrome Store](https://chrome.google.com/webstore/detail/bem-devtools/phioabmfljcmdaiiibdhecmbpaikafnl)
+
 ####Start
 ```
 npm i
