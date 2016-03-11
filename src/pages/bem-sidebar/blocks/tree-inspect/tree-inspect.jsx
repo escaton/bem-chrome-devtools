@@ -9,6 +9,11 @@ class TreeInspect extends React.Component {
             collapsed: {}
         }
     }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            collapsed: {}
+        });
+    }
     onCollapseToggle(name) {
         var collapsed = this.state.collapsed;
         collapsed[name] = !collapsed[name];
