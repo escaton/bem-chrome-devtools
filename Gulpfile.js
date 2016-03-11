@@ -1,7 +1,10 @@
 'use strict';
 
+var path = require('path');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var addsrc = require('gulp-add-src');
+var zip = require('gulp-zip');
 var glob = require('glob');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
@@ -66,4 +69,14 @@ gulp.task('build', function(done) {
         });
         es.merge(tasks).on('end', done);
     });
+});
+
+gulp.task('dist', function() {
+    var keyPath = path.join(process.env.HOME, '.keys', 'bem-chrome-devtools.pem');
+    return es.merge([
+            gulp.src('src/*'),
+            gulp.src(keyPath).pipe(rename('key.pem'))
+        ])
+        .pipe(zip('archive.zip'))
+        .pipe(gulp.dest('dist'));
 });
