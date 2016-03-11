@@ -3,8 +3,8 @@
 body {
     margin: 0;
     padding: 0;
-    font-size: 11px;
-    font-family: Menlo, monospace;
+    font-size: 12px;
+    font-family: 'Lucida Grande', sans-serif;
 }
 
 .blocks {
@@ -14,4 +14,12 @@ body {
 .blocks__list {
     margin: 0;
     padding: 0;
+}
+
+.blocks__info {
+    text-align: center;
+    font-style: italic;
+    padding: 6px;
+    color: #888;
+    display: block;
 }

@@ -62,7 +62,9 @@ import createEvalHelper from '../eval-helper/eval-helper.js';
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            blocks: {}
+        }
     }
     componentDidMount() {
         var self = this;
@@ -93,19 +95,27 @@ class App extends React.Component {
     }
     render() {
         var blocks = this.state.blocks;
-        if (blocks) {
-            var layout = Object.keys(blocks).map(function(blockName) {
+        var blockNames = Object.keys(blocks);
+        var content;
+        if (blocks && blockNames.length) {
+            var list = blockNames.map(function(blockName) {
                 return <Block data={{ name: blockName, params: blocks[blockName] }} />
             });
-            return (
-                <div className="blocks">
-                    <ul className="blocks__list">
-                        { layout }
-                    </ul>
-                </div>
+            content = (
+                <ul className="blocks__list">
+                    { list }
+                </ul>
+            );
+        } else {
+            content = (
+                <span className="blocks__info">No blocks</span>
             );
         }
-        return false;
+        return (
+            <div className="blocks">
+                { content }
+            </div>
+        );
     }
 };
 
