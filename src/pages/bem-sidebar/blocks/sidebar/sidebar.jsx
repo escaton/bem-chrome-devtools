@@ -19,7 +19,7 @@ function getBlocks() {
                 ')(?=\\s|$)'
             ].join(''), 'g');
 
-        (elem.className.match(regexp) || []).forEach(function(className) {
+        (elem.className.match(regexp) || []).forEach((className) => {
             var iModVal = (className = className.trim()).lastIndexOf(MOD_DELIM),
                 iModName = className.substr(0, iModVal - 1).lastIndexOf(MOD_DELIM);
             res[className.substr(iModName + 1, iModVal - iModName - 1)] = className.substr(iModVal + 1);
@@ -68,37 +68,78 @@ class App extends React.Component {
     }
     componentDidMount() {
         var self = this;
-        createEvalHelper(function(helper) {
-            self.evalHelper = helper;
+
+        var backgroundPageConnection = chrome.runtime.connect({
+            name: 'bem-sidebar'
+        });
+
+        backgroundPageConnection.onMessage.addListener(self.onBackgoundMessage.bind(self));
+
+        backgroundPageConnection.postMessage({
+            tabId: chrome.devtools.inspectedWindow.tabId,
+            name: 'init'
+        });
+        chrome.devtools.panels.elements.onSelectionChanged.addListener(self.elementSelected.bind(self));
+        self.inject();
+    }
+    onBackgoundMessage(data) {
+        var self = this;
+        switch (data.name) {
+            case 'window-status':
+                switch (data.value) {
+                    case 'loading':
+                        self.setState({
+                            ready: false
+                        });
+                        break;
+                    case 'complete':
+                        self.inject();
+                        break;
+                    default:
+                }
+            default:
+        }
+    }
+    inject() {
+        var self = this;
+        createEvalHelper((helper) => {
             helper.defineFunctions([{
                 name: 'getBlocks',
                 string: getBlocks.toString()
-            }], function(result, error) {
-                self.elementSelected();
-                chrome.devtools.panels.elements.onSelectionChanged.addListener(function() {
-                    self.elementSelected();
-                });
+            }], (result, error) => {
+                if (error) {
+                    console.error(error)
+                } else {
+                    self.evalHelper = helper;
+                    self.setState({
+                        ready: true
+                    }, () => {
+                        self.elementSelected();
+                    });
+                }
             });
         });
     }
     elementSelected() {
         var self = this;
-        self.evalHelper.executeFunction('getBlocks', [], function(result, error) {
-            if (error) {
-                console.error(error)
-            } else {
-                self.setState({
-                    blocks: result
-                });
-            }
-        });
+        if (self.state.ready) {
+            self.evalHelper.executeFunction('getBlocks', [], (result, error) => {
+                if (error) {
+                    console.error(error)
+                } else {
+                    self.setState({
+                        blocks: result
+                    });
+                }
+            });
+        }
     }
     render() {
         var blocks = this.state.blocks;
         var blockNames = Object.keys(blocks);
         var content;
         if (blocks && blockNames.length) {
-            var list = blockNames.map(function(blockName) {
+            var list = blockNames.map((blockName) => {
                 return <Block data={{ name: blockName, params: blocks[blockName] }} />
             });
             content = (
