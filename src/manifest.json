@@ -6,5 +6,11 @@
   "devtools_page": "pages/devtools/devtools.html",
   "background": {
     "scripts": ["pages/background/background.js"]
+  },
+  "icons": {
+    "16": "assets/16.png",
+    "48": "assets/48.png",
+    "64": "assets/64.png",
+    "128": "assets/128.png"
   }
 }
