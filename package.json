@@ -4,8 +4,7 @@
   "description": "",
   "main": "background.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -t [ babelify --presets [ es2015 react ] ] pages/bem-sidebar/bem-sidebar.js -o pages/bem-sidebar/bem-sidebar.bundle.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
