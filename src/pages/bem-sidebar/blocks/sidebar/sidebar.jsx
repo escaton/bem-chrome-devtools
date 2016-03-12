@@ -2,6 +2,10 @@
 
 function getBlocks() {
 
+    if (!BEM) {
+        throw new Error('No BEM on page');
+    }
+
     function extractMods(elem, name) {
         var res = {};
         var MOD_DELIM = BEM.INTERNAL.MOD_DELIM;

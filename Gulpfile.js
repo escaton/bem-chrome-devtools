@@ -93,10 +93,11 @@ gulp.task('bump', function() {
 
 gulp.task('dist', function() {
     var keyPath = path.join(process.env.HOME, '.keys', 'bem-chrome-devtools.pem');
+    var version = require('./src/manifest').version;
     return es.merge([
-            gulp.src('src/*'),
+            gulp.src('src/**'),
             gulp.src(keyPath).pipe(rename('key.pem'))
         ])
-        .pipe(zip('archive.zip'))
+        .pipe(zip('bem-devtools-' + version + '.zip'))
         .pipe(gulp.dest('dist'));
 });
