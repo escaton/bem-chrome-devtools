@@ -1,36 +1,37 @@
 'use strict';
 
+function extractMods(elem, name) {
+    var res = {};
+    var MOD_DELIM = BEM.INTERNAL.MOD_DELIM;
+    var NAME_PATTERN = BEM.INTERNAL.NAME_PATTERN;
+    var regexp = new RegExp([
+            '(\\s|^)',
+            name,
+            MOD_DELIM,
+            '(',
+            NAME_PATTERN,
+            ')',
+            MOD_DELIM,
+            '(',
+            NAME_PATTERN,
+            ')(?=\\s|$)'
+        ].join(''), 'g');
+
+    (elem.className.match(regexp) || []).forEach((className) => {
+        var iModVal = (className = className.trim()).lastIndexOf(MOD_DELIM),
+            iModName = className.substr(0, iModVal - 1).lastIndexOf(MOD_DELIM);
+        res[className.substr(iModName + 1, iModVal - iModName - 1)] = className.substr(iModVal + 1);
+    });
+    return res;
+}
+
 function getBlocks() {
 
     if (!BEM) {
         throw new Error('No BEM on page');
     }
 
-    function extractMods(elem, name) {
-        var res = {};
-        var MOD_DELIM = BEM.INTERNAL.MOD_DELIM;
-        var NAME_PATTERN = BEM.INTERNAL.NAME_PATTERN;
-        var regexp = new RegExp([
-                '(\\s|^)',
-                name,
-                MOD_DELIM,
-                '(',
-                NAME_PATTERN,
-                ')',
-                MOD_DELIM,
-                '(',
-                NAME_PATTERN,
-                ')(?=\\s|$)'
-            ].join(''), 'g');
-
-        (elem.className.match(regexp) || []).forEach((className) => {
-            var iModVal = (className = className.trim()).lastIndexOf(MOD_DELIM),
-                iModName = className.substr(0, iModVal - 1).lastIndexOf(MOD_DELIM);
-            res[className.substr(iModName + 1, iModVal - iModName - 1)] = className.substr(iModVal + 1);
-        });
-        return res;
-    }
-
+    var self = this; // window[NAMESPACE]
     var el = $0;
     var blockRegex = new RegExp('(\\s|^)' + BEM.INTERNAL.NAME_PATTERN + '(?=\\s|$)');
     var classes = Array.prototype.slice.call(el.classList, 0);
@@ -41,7 +42,7 @@ function getBlocks() {
                 return;
             }
             if (blockRegex.test(className)) {
-                var mods = extractMods(el, className);
+                var mods = self.extractMods(el, className);
                 res[className] = {
                     mods: mods
                 }
@@ -78,7 +79,7 @@ class App extends React.Component {
             name: 'bem-sidebar'
         });
 
-        backgroundPageConnection.onMessage.addListener(self.onBackgoundMessage.bind(self));
+        backgroundPageConnection.onMessage.addListener(self.onBackgroundMessage.bind(self));
 
         backgroundPageConnection.postMessage({
             tabId: chrome.devtools.inspectedWindow.tabId,
@@ -87,7 +88,7 @@ class App extends React.Component {
         chrome.devtools.panels.elements.onSelectionChanged.addListener(self.elementSelected.bind(self));
         self.inject();
     }
-    onBackgoundMessage(data) {
+    onBackgroundMessage(data) {
         var self = this;
         switch (data.name) {
             case 'window-status':
@@ -111,6 +112,9 @@ class App extends React.Component {
             helper.defineFunctions([{
                 name: 'getBlocks',
                 string: getBlocks.toString()
+            }, {
+                name: 'extractMods',
+                string: extractMods.toString()
             }], (result, error) => {
                 if (error) {
                     console.error(error)

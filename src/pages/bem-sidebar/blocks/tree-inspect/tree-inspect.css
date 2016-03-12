@@ -7,7 +7,7 @@
 }
 
 .tree-inspect__item {
-    margin: 2px;
+    margin: 2px 0;
     display: flex;
     word-break: break-all;
 }
@@ -19,7 +19,7 @@
 .tree-inspect__label {
     margin-right: 5px;
     position: relative;
-    padding-left: 11px;
+    padding-left: 12px;
     box-sizing: border-box;
     flex: 0 0 auto;
 }
