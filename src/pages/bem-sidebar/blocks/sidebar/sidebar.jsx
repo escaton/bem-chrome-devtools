@@ -35,25 +35,29 @@ function getBlocks() {
     var el = $0;
     var blockRegex = new RegExp('(\\s|^)' + BEM.INTERNAL.NAME_PATTERN + '(?=\\s|$)');
     var classes = Array.prototype.slice.call(el.classList, 0);
-    var res = {};
-    classes
-        .forEach((className) => {
-            if (className === 'i-bem') {
-                return;
+    var res = {
+        blocks: {}
+    };
+    var hasIBem = false;
+    classes.forEach((className) => {
+        if (className === 'i-bem') {
+            hasIBem = true;
+            return;
+        }
+        if (blockRegex.test(className)) {
+            var mods = self.extractMods(el, className);
+            res.blocks[className] = {
+                mods: mods
             }
-            if (blockRegex.test(className)) {
-                var mods = self.extractMods(el, className);
-                res[className] = {
-                    mods: mods
-                }
-            }
-        });
+        }
+    });
     var bemData = el.dataset.bem;
     if (bemData) {
         var jsData = JSON.parse(bemData);
         Object.keys(jsData).forEach((block) => {
-            res[block] = res[block] || {};
-            res[block].params = jsData[block];
+            res.blocks[block] = res.blocks[block] || {};
+            res.blocks[block].params = jsData[block];
+            res.blocks[block].iBem = hasIBem && !!BEM.blocks[block];
         });
     }
     return res;
@@ -75,22 +79,23 @@ class App extends React.Component {
     componentDidMount() {
         var self = this;
 
-        var backgroundPageConnection = chrome.runtime.connect({
-            name: 'bem-sidebar'
+        self.backgroundPageConnection = chrome.runtime.connect({
+            name: 'sidebar'
         });
-
-        backgroundPageConnection.onMessage.addListener(self.onBackgroundMessage.bind(self));
-
-        backgroundPageConnection.postMessage({
-            tabId: chrome.devtools.inspectedWindow.tabId,
-            name: 'init'
+        self.backgroundPageConnection.onMessage.addListener(self.onMessage.bind(self));
+        self.backgroundPageConnection.postMessage({
+            cmd: 'init',
+            tabId: chrome.devtools.inspectedWindow.tabId
         });
         chrome.devtools.panels.elements.onSelectionChanged.addListener(self.elementSelected.bind(self));
+        window.addEventListener('message', (e) => {
+            self.onMessage(e.data);
+        }, false);
         self.inject();
     }
-    onBackgroundMessage(data) {
+    onMessage(data) {
         var self = this;
-        switch (data.name) {
+        switch (data.cmd) {
             case 'window-status':
                 switch (data.value) {
                     case 'loading':
@@ -103,8 +108,42 @@ class App extends React.Component {
                         break;
                     default:
                 }
+                break;
+            case 'sidebar-status':
+                switch (data.value) {
+                    case 'shown':
+                        self.watch();
+                        break;
+                    case 'hidden':
+                        self.stopWatching();
+                        break;
+                    default:
+                }
+                break;
+            case 'content-script-injected':
+                self.setState({
+                    ready: true
+                }, () => {
+                    self.elementSelected(true);
+                });
+                break;
+            case 'watch-changes':
+                self.elementSelected();
             default:
         }
+    }
+    watch() {
+        var self = this;
+        // first call is initial
+        if (self.state.ready) {
+            self.elementSelected(true);
+        }
+    }
+    stopWatching() {
+        var self = this;
+        self.evalHelper._eval("stopWatching()", {
+            useContentScriptContext: true
+        });
     }
     inject() {
         var self = this;
@@ -117,19 +156,17 @@ class App extends React.Component {
                 string: extractMods.toString()
             }], (result, error) => {
                 if (error) {
-                    console.error(error)
+                    console.error(error);
                 } else {
                     self.evalHelper = helper;
-                    self.setState({
-                        ready: true
-                    }, () => {
-                        self.elementSelected();
+                    self.backgroundPageConnection.postMessage({
+                        cmd: 'inject-content-script'
                     });
                 }
             });
         });
     }
-    elementSelected() {
+    elementSelected(watch) {
         var self = this;
         if (self.state.ready) {
             self.evalHelper.executeFunction('getBlocks', [], (result, error) => {
@@ -137,8 +174,17 @@ class App extends React.Component {
                     console.error(error)
                 } else {
                     self.setState({
-                        blocks: result
+                        blocks: result.blocks
                     });
+                    if (watch) {
+                        self.evalHelper._eval("watchSelectedElement($0)", {
+                            useContentScriptContext: true
+                        }, (result, error) => {
+                            if (error) {
+                                console.error(error);
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -153,7 +199,7 @@ class App extends React.Component {
             });
             content = (
                 <ul className="blocks__list">
-                    { list }
+                    {list}
                 </ul>
             );
         } else {
@@ -163,7 +209,7 @@ class App extends React.Component {
         }
         return (
             <div className="blocks">
-                { content }
+                {content}
             </div>
         );
     }

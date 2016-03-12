@@ -28,9 +28,19 @@ class ModsInspect extends React.Component {
 
 class Block extends React.Component {
     render() {
+        var attrs = [];
+        var iBem = !!this.props.data.params.iBem;
+        var jsInited = this.props.data.params.mods.js === 'inited';
+        if (iBem) {
+            attrs.push(<span className="block__attr">i-bem</span>);
+            attrs.push(<span className={"block__attr " + "block__attr_active_" + (jsInited ? 'yes' : 'no')}>{ jsInited ? 'inited' : 'not inited'}</span>);
+        }
         return (
             <div className="block">
-                <span className="block__name">{this.props.data.name}</span>
+                <div className="block__head">
+                    <span className="block__name">{this.props.data.name}</span>
+                    <span className="block__attrs">{attrs}</span>
+                </div>
                 <div className="block__title">Mods</div>
                 <div className="block__mods">
                     <ModsInspect mods={this.props.data.params.mods} />

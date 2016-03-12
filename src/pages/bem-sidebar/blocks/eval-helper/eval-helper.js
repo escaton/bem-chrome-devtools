@@ -41,6 +41,9 @@ function createEvalHelper(callback) {
      * @param {String}   string Body of the function
      * @param {Function} callback Function to be called after definion of function
      */
+
+    _eval: chrome.devtools.inspectedWindow.eval.bind(chrome.devtools.inspectedWindow),
+
     defineFunction: function(name, string, callback) {
       chrome.devtools.inspectedWindow.eval(wrapFunction(name, string) + getSrcURL(),
         function(result, error) {

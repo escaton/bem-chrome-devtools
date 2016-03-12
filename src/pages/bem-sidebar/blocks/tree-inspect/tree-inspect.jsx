@@ -56,12 +56,18 @@ class TreeInspect extends React.Component {
                             ? <i className={
                                 'tree-inspect__collapse-toggle' +
                                 ' tree-inspect__collapse-toggle_collapsed_' + (isCollapsed ? 'yes' : 'no')
-                                } onClick={self.onCollapseToggle.bind(self, node)}></i>
+                                } onClick={self.onCollapseToggle.bind(self, node)}>
+                            </i>
                             : false
                         }
                         {node}
                     </span>
-                    <span className={"tree-inspect__value tree-inspect__value_collapsed_" + (isCollapsed ? 'yes' : 'no')}>{content}</span>
+                    <span className={
+                        'tree-inspect__value' +
+                        ' tree-inspect__value_collapsed_' + (isCollapsed ? 'yes' : 'no')
+                    }>
+                        {content}
+                    </span>
                 </li>
             );
         });

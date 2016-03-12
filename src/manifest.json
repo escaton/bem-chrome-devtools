@@ -9,6 +9,10 @@
       "pages/background/background.js"
     ]
   },
+  "permissions": [
+    "tabs",
+    "<all_urls>"
+  ],
   "icons": {
     "16": "assets/16.png",
     "48": "assets/48.png",

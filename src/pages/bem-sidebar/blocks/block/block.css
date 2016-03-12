@@ -4,18 +4,43 @@
     margin-bottom: 15px;
 }
 
-.block__name {
+.block__head {
     font-weight: normal;
     background: #f3f3f3;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ccc;
-    display: block;
     box-sizing: border-box;
     padding: 2px 10px;
 }
 
-.block:first-child .block__name {
+.block:first-child .block__head {
     border-top: none;
+}
+
+.block__name {
+
+}
+
+.block__attrs {
+    font-style: italic;
+    margin-left: 20px;
+}
+
+.block__attr {
+    margin-right: 5px;
+    display: inline-block;
+    border: 1px solid #aaa;
+    padding: 0px 4px;
+    border-radius: 2px;
+    background: #fff;
+}
+
+.block__attr_active_yes {
+
+}
+
+.block__attr_active_no {
+    opacity: 0.5;
 }
 
 .block__title {
