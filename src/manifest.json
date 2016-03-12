@@ -1,11 +1,13 @@
 {
   "name": "BEM-devtools",
-  "version": "1.0",
+  "version": "1.0.0",
   "manifest_version": 2,
   "minimum_chrome_version": "41.0",
   "devtools_page": "pages/devtools/devtools.html",
   "background": {
-    "scripts": ["pages/background/background.js"]
+    "scripts": [
+      "pages/background/background.js"
+    ]
   },
   "icons": {
     "16": "assets/16.png",

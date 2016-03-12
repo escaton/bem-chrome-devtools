@@ -3,7 +3,7 @@
 var path = require('path');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var addsrc = require('gulp-add-src');
+var bump = require('gulp-bump');
 var zip = require('gulp-zip');
 var glob = require('glob');
 var rename = require('gulp-rename');
@@ -69,6 +69,26 @@ gulp.task('build', function(done) {
         });
         es.merge(tasks).on('end', done);
     });
+});
+
+gulp.task('bump', function() {
+    var types = {
+        p: 'patch',
+        m: 'minor'
+    }
+    var type = 'patch';
+    Object.keys(options).some(function(opt) {
+        if (types[opt]) {
+            type = types[opt];
+            return true;
+        }
+    });
+    gulp
+        .src(['./package.json', './src/manifest.json'], {
+            base: '.'
+        })
+        .pipe(bump({type: type}))
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('dist', function() {
