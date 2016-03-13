@@ -56,9 +56,11 @@ chrome.runtime.onConnect.addListener((port) => {
         port.onMessage.addListener(sidebarListener);
         port.onDisconnect.addListener(function() {
             port.onMessage.removeListener(sidebarListener);
-            sidebarConnections[port._tabId].contentScriptPort.postMessage({
-                cmd: 'stop-watching'
-            });
+            if (sidebarConnections[port._tabId].contentScriptPort) {
+                sidebarConnections[port._tabId].contentScriptPort.postMessage({
+                    cmd: 'stop-watching'
+                });
+            }
             delete sidebarConnections[port._tabId];
         });
     } else if (port.name === 'content-script') {

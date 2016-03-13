@@ -25,7 +25,7 @@ function extractMods(elem, name) {
     return res;
 }
 
-function getBlocks() {
+function getEntities() {
 
     if (!BEM) {
         throw new Error('No BEM on page');
@@ -33,10 +33,13 @@ function getBlocks() {
 
     var self = this; // window[NAMESPACE]
     var el = $0;
-    var blockRegex = new RegExp('(\\s|^)' + BEM.INTERNAL.NAME_PATTERN + '(?=\\s|$)');
+    var NAME_PATTERN = BEM.INTERNAL.NAME_PATTERN;
+    var ELEM_DELIM = BEM.INTERNAL.ELEM_DELIM;
+    var blockRegex = new RegExp('^' + NAME_PATTERN + '$');
+    var elemRegex = new RegExp('^(' + NAME_PATTERN + ')' + ELEM_DELIM + '(' + NAME_PATTERN + ')$');
     var classes = Array.prototype.slice.call(el.classList, 0);
     var res = {
-        blocks: {}
+        entities: {}
     };
     var hasIBem = false;
     classes.forEach((className) => {
@@ -46,7 +49,16 @@ function getBlocks() {
         }
         if (blockRegex.test(className)) {
             var mods = self.extractMods(el, className);
-            res.blocks[className] = {
+            res.entities[className] = {
+                block: className,
+                mods: mods
+            }
+        } else if (elemRegex.test(className)) {
+            var mods = self.extractMods(el, className);
+            var parts = className.match(elemRegex);
+            res.entities[className] = {
+                block: parts[1],
+                elem: parts[2],
                 mods: mods
             }
         }
@@ -54,10 +66,11 @@ function getBlocks() {
     var bemData = el.dataset.bem;
     if (bemData) {
         var jsData = JSON.parse(bemData);
-        Object.keys(jsData).forEach((block) => {
-            res.blocks[block] = res.blocks[block] || {};
-            res.blocks[block].params = jsData[block];
-            res.blocks[block].iBem = hasIBem && !!BEM.blocks[block];
+        Object.keys(jsData).forEach((name) => {
+            var entity = res.entities[name] = res.entities[name] || {};
+            entity.params = jsData[name];
+            entity.iBem = hasIBem && !!BEM.blocks[name];
+            entity.liveInit = entity.iBem && !!BEM.blocks[name]._liveInitable;
         });
     }
     return res;
@@ -72,7 +85,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            blocks: {},
+            entities: {},
             ready: false
         }
     }
@@ -149,8 +162,8 @@ class App extends React.Component {
         var self = this;
         createEvalHelper((helper) => {
             helper.defineFunctions([{
-                name: 'getBlocks',
-                string: getBlocks.toString()
+                name: 'getEntities',
+                string: getEntities.toString()
             }, {
                 name: 'extractMods',
                 string: extractMods.toString()
@@ -169,12 +182,12 @@ class App extends React.Component {
     elementSelected(watch) {
         var self = this;
         if (self.state.ready) {
-            self.evalHelper.executeFunction('getBlocks', [], (result, error) => {
+            self.evalHelper.executeFunction('getEntities', [], (result, error) => {
                 if (error) {
                     console.error(error)
                 } else {
                     self.setState({
-                        blocks: result.blocks
+                        entities: result.entities
                     });
                     if (watch) {
                         self.evalHelper._eval("watchSelectedElement($0)", {
@@ -190,12 +203,12 @@ class App extends React.Component {
         }
     }
     render() {
-        var blocks = this.state.blocks;
-        var blockNames = Object.keys(blocks);
+        var entities = this.state.entities;
+        var entityNames = Object.keys(entities);
         var content;
-        if (blocks && blockNames.length) {
-            var list = blockNames.map((blockName) => {
-                return <Block data={{ name: blockName, params: blocks[blockName] }} />
+        if (entities && entityNames.length) {
+            var list = entityNames.map((name) => {
+                return <Block name={name} data={entities[name]} />
             });
             content = (
                 <ul className="blocks__list">

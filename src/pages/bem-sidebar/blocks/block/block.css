@@ -13,12 +13,24 @@
     padding: 2px 10px;
 }
 
+.block_is-elem_yes .block__head {
+
+}
+
 .block:first-child .block__head {
     border-top: none;
 }
 
 .block__name {
+    line-height: 17px;
+}
 
+.block__name-block {
+
+}
+
+.block__name-elem {
+    color: #007400;
 }
 
 .block__attrs {
@@ -60,7 +72,7 @@
 }
 
 .block__mod {
-display: flex;
+    display: flex;
     line-height: 16px;
     padding: 0 20px;
     box-sizing: border-box;

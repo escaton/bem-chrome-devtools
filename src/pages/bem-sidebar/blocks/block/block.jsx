@@ -29,25 +29,35 @@ class ModsInspect extends React.Component {
 class Block extends React.Component {
     render() {
         var attrs = [];
-        var iBem = !!this.props.data.params.iBem;
-        var jsInited = this.props.data.params.mods.js === 'inited';
+        var data = this.props.data;
+        var iBem = data.iBem;
+        var isElem = !!data.elem;
+        var jsInited = data.mods.js === 'inited';
+        var liveInit = data.liveInit;
         if (iBem) {
             attrs.push(<span className="block__attr">i-bem</span>);
             attrs.push(<span className={"block__attr " + "block__attr_active_" + (jsInited ? 'yes' : 'no')}>{ jsInited ? 'inited' : 'not inited'}</span>);
         }
+        if (liveInit) {
+            attrs.push(<span className="block__attr">live</span>);
+        }
+        var name = [<span className="block__name-block">{data.block}</span>];
+        if (isElem) {
+            name.push(<span className="block__name-elem">__{data.elem}</span>);
+        }
         return (
-            <div className="block">
+            <div className={"block block_is-elem_" + (isElem ? 'yes' : 'no')}>
                 <div className="block__head">
-                    <span className="block__name">{this.props.data.name}</span>
+                    <span className="block__name">{name}</span>
                     <span className="block__attrs">{attrs}</span>
                 </div>
                 <div className="block__title">Mods</div>
                 <div className="block__mods">
-                    <ModsInspect mods={this.props.data.params.mods} />
+                    <ModsInspect mods={data.mods} />
                 </div>
                 <div className="block__title">Params</div>
                 <div className="block__params">
-                    <TreeInspect data={this.props.data.params.params} />
+                    <TreeInspect data={data.params} />
                 </div>
             </div>
         )
