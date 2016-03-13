@@ -2,24 +2,58 @@
 
 import React from 'react';
 
-class TreeInspect extends React.Component {
+class InspectItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            collapsed: {}
+            collapsed: false
         }
     }
-    componentWillReceiveProps(nextProps) {
+    onCollapseToggle() {
         this.setState({
-            collapsed: {}
+            collapsed: !this.state.collapsed
         });
     }
-    onCollapseToggle(name) {
-        var collapsed = this.state.collapsed;
-        collapsed[name] = !collapsed[name];
-        this.setState({
-            collapsed: collapsed
-        });
+    render() {
+        var self = this;
+        var props = self.props;
+        var node = props.node;
+        var type = props.type;
+        var isPrimitive = props.isPrimitive;
+        var needCollapseToggle = props.needCollapseToggle;
+        var isCollapsed = this.state.collapsed;
+        return (
+            <li className={
+                'tree-inspect__item' +
+                ' tree-inspect__item_type_' + type +
+                ' tree-inspect__item_collapsable_' + (needCollapseToggle ? 'yes' : 'no') +
+                ' tree-inspect__item_primitive_' + (isPrimitive ? 'yes' : 'no')
+            }>
+                <span className="tree-inspect__label">
+                    { needCollapseToggle
+                        ? <i className={
+                            'tree-inspect__collapse-toggle' +
+                            ' tree-inspect__collapse-toggle_collapsed_' + (isCollapsed ? 'yes' : 'no')
+                            } onClick={self.onCollapseToggle.bind(self)}>
+                        </i>
+                        : false
+                    }
+                    {node}
+                </span>
+                <span className={
+                    'tree-inspect__value' +
+                    ' tree-inspect__value_collapsed_' + (isCollapsed ? 'yes' : 'no')
+                }>
+                    {this.props.children}
+                </span>
+            </li>
+        );
+    }
+}
+
+class TreeInspect extends React.Component {
+    constructor(props) {
+        super(props);
     }
     render() {
         var self = this;
@@ -29,7 +63,6 @@ class TreeInspect extends React.Component {
             var value = data[node];
             var content;
             var needCollapseToggle = false;
-            var isCollapsed = self.state.collapsed[node];
             var isPrimitive = true;
             if (typeof value === 'object') {
                 if (value === null) {
@@ -45,30 +78,14 @@ class TreeInspect extends React.Component {
                 content = JSON.stringify(value);
             }
             return (
-                <li className={
-                    'tree-inspect__item' +
-                    ' tree-inspect__item_type_' + typeof(value) +
-                    ' tree-inspect__item_collapsable_' + (needCollapseToggle ? 'yes' : 'no') +
-                    ' tree-inspect__item_primitive_' + (isPrimitive ? 'yes' : 'no')
-                }>
-                    <span className="tree-inspect__label">
-                        { needCollapseToggle
-                            ? <i className={
-                                'tree-inspect__collapse-toggle' +
-                                ' tree-inspect__collapse-toggle_collapsed_' + (isCollapsed ? 'yes' : 'no')
-                                } onClick={self.onCollapseToggle.bind(self, node)}>
-                            </i>
-                            : false
-                        }
-                        {node}
-                    </span>
-                    <span className={
-                        'tree-inspect__value' +
-                        ' tree-inspect__value_collapsed_' + (isCollapsed ? 'yes' : 'no')
-                    }>
-                        {content}
-                    </span>
-                </li>
+                <InspectItem
+                    node={node}
+                    type={typeof(value)}
+                    isPrimitive={isPrimitive}
+                    needCollapseToggle={needCollapseToggle}
+                >
+                    {content}
+                </InspectItem>
             );
         });
         if (nodes.length) {
