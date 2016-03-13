@@ -1,6 +1,6 @@
 ###BEM devtools
 
-Right now it supports inspecting Block `js params` and `mods`
+Lets you inspect blocks and elems through `mods` and `js params`
 
 [Chrome Store](https://chrome.google.com/webstore/detail/bem-devtools/phioabmfljcmdaiiibdhecmbpaikafnl)
 
