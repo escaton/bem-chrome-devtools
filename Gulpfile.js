@@ -52,13 +52,16 @@ gulp.task('build', function(done) {
                 gutil.log('Start rebuild');
                 var stream = bundler
                     .bundle()
+                    .on('error', function (err) {
+                        gutil.log(err.name, err.loc);
+                        console.log(err.codeFrame);
+                    })
                     .pipe(source(entry))
                     .pipe(rename(function(path) {
                         path.basename = path.basename.replace(/entry$/, 'bundle')
                     }))
                     .pipe(gulp.dest('./'));
 
-                stream.on('error', gutil.log);
                 return stream;
             };
 
