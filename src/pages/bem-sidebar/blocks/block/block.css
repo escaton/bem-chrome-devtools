@@ -1,3 +1,4 @@
+@import url(../mods-inspect/mods-inspect.css);
 @import url(../tree-inspect/tree-inspect.css);
 
 .block {
@@ -61,39 +62,6 @@
     margin: 5px 0;
 }
 
-.block__mods {
-}
-
-.block__mods-list {
-    list-style-type: none;
-    font-size: 11px;
-    font-family: Menlo, monospace;
-    padding: 0;
-}
-
-.block__mod {
-    display: flex;
-    line-height: 16px;
-    padding: 0 20px;
-    box-sizing: border-box;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.block__mod:nth-child(odd) {
-    background-color: #F5F5F5;
-}
-
-.block__mod-name {
-    color: rgb(200, 0, 0);
-    width: 16em;
-    overflow: hidden;
-}
-
-.block__mod-val {
-
-}
-
-.block__params {
+.block__params-inspect {
     padding: 0 8px;
 }

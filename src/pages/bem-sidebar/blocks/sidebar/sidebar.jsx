@@ -67,8 +67,31 @@ class App extends React.Component {
                 break;
             case 'watch-changes':
                 self.elementSelected();
+                break;
+            case 'mod-add':
+                self.modAdd(data.owner, data.mod);
+                break;
+            case 'mod-remove':
+                self.modRemove(data.owner, data.mod);
+                break;
             default:
         }
+    }
+    modAdd(owner, mod) {
+        var self = this;
+        self.evalHelper.executeFunction('modAdd', [owner, mod], (result, error) => {
+            if (error) {
+                console.error(error);
+            }
+        });
+    }
+    modRemove(owner, mod) {
+        var self = this;
+        self.evalHelper.executeFunction('modRemove', [owner, mod], (result, error) => {
+            if (error) {
+                console.error(error);
+            }
+        });
     }
     watch() {
         var self = this;
@@ -92,6 +115,12 @@ class App extends React.Component {
             }, {
                 name: 'extractMods',
                 string: injectedHelpers.extractMods.toString()
+            }, {
+                name: 'modAdd',
+                string: injectedHelpers.modAdd.toString()
+            }, {
+                name: 'modRemove',
+                string: injectedHelpers.modRemove.toString()
             }], (result, error) => {
                 if (error) {
                     console.error(error);

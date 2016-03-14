@@ -63,7 +63,7 @@ export function getEntities() {
             }
         }
     });
-    var bemData = el.dataset.bem;
+    var bemData = el.dataset && el.dataset.bem;
     if (bemData) {
         var jsData = JSON.parse(bemData);
         Object.keys(jsData).forEach((name) => {
@@ -74,4 +74,39 @@ export function getEntities() {
         });
     }
     return res;
+}
+
+export function modAdd(owner, mod) {
+    var el = $0;
+    var classList = el.classList;
+    var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
+    var isElInited = classList.contains(elInitedClass);
+    if (isElInited) {
+        $(el).bem(owner.block).setMod(mod.name, mod.value);
+    } else {
+        var oldClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, '.+');
+        var newClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, mod.value);
+        var modRegex = new RegExp('^' + oldClass + '$');
+        var classListArray = Array.prototype.slice.call(classList, 0);
+        var classToRemove = classListArray.filter((className) => {
+            return modRegex.test(className);
+        });
+        classToRemove.forEach((className) => {
+            classList.remove(className);
+        });
+        classList.add(newClass);
+    }
+}
+
+export function modRemove(owner, mod) {
+    var el = $0;
+    var classList = el.classList;
+    var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
+    var isElInited = classList.contains(elInitedClass);
+    if (isElInited) {
+        $(el).bem(owner.block).delMod(mod.name);
+    } else {
+        var deleteClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, mod.value);
+        classList.remove(deleteClass);
+    }
 }

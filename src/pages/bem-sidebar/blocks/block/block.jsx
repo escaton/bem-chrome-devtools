@@ -1,33 +1,26 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import TreeInspect from '../tree-inspect/tree-inspect.jsx';
+import ModsInspect from '../mods-inspect/mods-inspect.jsx';
 
-class ModsInspect extends React.Component {
+class ParamsInspect extends React.Component {
     render() {
-        var mods = this.props.mods;
-        var modNames = Object.keys(mods);
-        var content;
-        if (modNames.length) {
-            content = modNames.map((modName) => {
-                return (
-                    <li className="block__mod">
-                        <span className="block__mod-name">{modName}</span>
-                        <span className="block__mod-val">{mods[modName]}</span>
-                    </li>
-                );
-            });
-        }
         return (
-            <ul className="block__mods-list">
-                {content}
-            </ul>
-        );
+            <div className="block__params">
+                <div className="block__title">Params</div>
+                <div className="block__params-inspect">
+                    <TreeInspect data={this.props.params} />
+                </div>
+            </div>
+        )
     }
 }
 
 class Block extends React.Component {
     render() {
+        var self = this;
         var attrs = [];
         var data = this.props.data;
         var iBem = data.iBem;
@@ -51,14 +44,8 @@ class Block extends React.Component {
                     <span className="block__name">{name}</span>
                     <span className="block__attrs">{attrs}</span>
                 </div>
-                <div className="block__title">Mods</div>
-                <div className="block__mods">
-                    <ModsInspect mods={data.mods} />
-                </div>
-                <div className="block__title">Params</div>
-                <div className="block__params">
-                    <TreeInspect data={data.params} />
-                </div>
+                <ModsInspect owner={{block: data.block, elem: data.elem}} mods={data.mods}/>
+                <ParamsInspect params={data.params} />
             </div>
         )
     }
