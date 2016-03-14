@@ -18,4 +18,4 @@ gulp watch
  - edit mods for elems
  - toggle mods
  - fallback if no BEM.INTERNAL constants
-
+ - try redux
