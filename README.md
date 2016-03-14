@@ -13,3 +13,10 @@ gulp watch
  - open devtools in separate window and `cmd+alt+i` if you want to debug it
 ![Open devtools in separate window](/assets/separate-window.png?raw=true)
  - Hack it :)
+
+####TODO
+ - edit mods for elems
+ - toggle mods
+ - deal with react warnings
+ - fallback if no BEM.INTERNAL constants
+
