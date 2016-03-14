@@ -42,7 +42,8 @@ class Mod extends React.Component {
         window.postMessage({
             cmd: 'mod-' + cmd,
             owner: self.props.owner,
-            mod: Object.assign({}, originalMod ? self.state.originalMod : self.state.mod)
+            mod: Object.assign({}, self.state.mod),
+            originalMod: originalMod && Object.assign({}, self.state.originalMod)
         }, '*');
     }
     modBlur(fieldName, e) {
@@ -63,7 +64,7 @@ class Mod extends React.Component {
                 self.props.removeMod();
                 self.commit('remove', true);
             } else if (fieldName === 'value' && self.checkChanges()) {
-                self.commit('add');
+                self.commit('add', true);
             }
         }
     }

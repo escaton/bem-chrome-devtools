@@ -76,37 +76,44 @@ export function getEntities() {
     return res;
 }
 
-export function modAdd(owner, mod) {
+export function modAdd(owner, mod, originalMod) {
     var el = $0;
     var classList = el.classList;
     var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
     var isElInited = classList.contains(elInitedClass);
     if (isElInited) {
-        $(el).bem(owner.block).setMod(mod.name, mod.value);
+        var block = $(el).bem(owner.block);
+        if (originalMod && (originalMod.name !== mod.name)) {
+            block.delMod(originalMod.name);
+        }
+        block.setMod(mod.name, mod.value);
     } else {
-        var oldClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, '.+');
-        var newClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, mod.value);
-        var modRegex = new RegExp('^' + oldClass + '$');
+        var maskToRemove = [BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, '.+')];
+        if (originalMod && (originalMod.name !== mod.name)) {
+            maskToRemove.push(BEM.INTERNAL.buildClass(owner.block, owner.elem, originalMod.name, '.+'))
+        }
+        var regexToRemove = new RegExp('^(' + maskToRemove.join('|') + ')$');
         var classListArray = Array.prototype.slice.call(classList, 0);
         var classToRemove = classListArray.filter((className) => {
-            return modRegex.test(className);
+            return regexToRemove.test(className);
         });
         classToRemove.forEach((className) => {
             classList.remove(className);
         });
+        var newClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, mod.value);
         classList.add(newClass);
     }
 }
 
-export function modRemove(owner, mod) {
+export function modRemove(owner, mod, originalMod) {
     var el = $0;
     var classList = el.classList;
     var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
     var isElInited = classList.contains(elInitedClass);
     if (isElInited) {
-        $(el).bem(owner.block).delMod(mod.name);
+        $(el).bem(owner.block).delMod(originalMod.name);
     } else {
-        var deleteClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, mod.value);
+        var deleteClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, originalMod.name, originalMod.value);
         classList.remove(deleteClass);
     }
 }

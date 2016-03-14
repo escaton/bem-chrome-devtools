@@ -69,25 +69,25 @@ class App extends React.Component {
                 self.elementSelected();
                 break;
             case 'mod-add':
-                self.modAdd(data.owner, data.mod);
+                self.modAdd(data);
                 break;
             case 'mod-remove':
-                self.modRemove(data.owner, data.mod);
+                self.modRemove(data);
                 break;
             default:
         }
     }
-    modAdd(owner, mod) {
+    modAdd({owner, mod, originalMod}) {
         var self = this;
-        self.evalHelper.executeFunction('modAdd', [owner, mod], (result, error) => {
+        self.evalHelper.executeFunction('modAdd', [owner, mod, originalMod], (result, error) => {
             if (error) {
                 console.error(error);
             }
         });
     }
-    modRemove(owner, mod) {
+    modRemove({owner, mod, originalMod}) {
         var self = this;
-        self.evalHelper.executeFunction('modRemove', [owner, mod], (result, error) => {
+        self.evalHelper.executeFunction('modRemove', [owner, mod, originalMod], (result, error) => {
             if (error) {
                 console.error(error);
             }
