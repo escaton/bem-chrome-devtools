@@ -79,6 +79,7 @@ class TreeInspect extends React.Component {
             }
             return (
                 <InspectItem
+                    key={index}
                     node={node}
                     type={typeof(value)}
                     isPrimitive={isPrimitive}

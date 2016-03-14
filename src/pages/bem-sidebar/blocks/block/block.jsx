@@ -28,15 +28,15 @@ class Block extends React.Component {
         var jsInited = data.mods.js === 'inited';
         var liveInit = data.liveInit;
         if (iBem) {
-            attrs.push(<span className="block__attr">i-bem</span>);
-            attrs.push(<span className={"block__attr " + "block__attr_active_" + (jsInited ? 'yes' : 'no')}>{ jsInited ? 'inited' : 'not inited'}</span>);
+            attrs.push(<span key="label-i-bem" className="block__attr">i-bem</span>);
+            attrs.push(<span key="label-js-inited" className={"block__attr " + "block__attr_active_" + (jsInited ? 'yes' : 'no')}>{ jsInited ? 'inited' : 'not inited'}</span>);
         }
         if (liveInit) {
-            attrs.push(<span className="block__attr">live</span>);
+            attrs.push(<span key="label-live" className="block__attr">live</span>);
         }
-        var name = [<span className="block__name-block">{data.block}</span>];
+        var name = [<span key="name-block" className="block__name-block">{data.block}</span>];
         if (isElem) {
-            name.push(<span className="block__name-elem">__{data.elem}</span>);
+            name.push(<span key="name-elem" className="block__name-elem">__{data.elem}</span>);
         }
         return (
             <div className={"block block_is-elem_" + (isElem ? 'yes' : 'no')}>

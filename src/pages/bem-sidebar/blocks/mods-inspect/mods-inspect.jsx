@@ -50,7 +50,7 @@ class ModsInspect extends React.Component {
         if (mods.length) {
             content = mods.map((mod, modIndex) => {
                 return (
-                    <Mod mod={mod} owner={self.props.owner} removeMod={self.removeMod.bind(self, modIndex)}/>
+                    <Mod key={mod.name + '_' + mod.val} mod={mod} owner={self.props.owner} removeMod={self.removeMod.bind(self, modIndex)}/>
                 )
             });
         }

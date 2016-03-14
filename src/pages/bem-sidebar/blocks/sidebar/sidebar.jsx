@@ -162,7 +162,7 @@ class App extends React.Component {
         var content;
         if (entities && entityNames.length) {
             var list = entityNames.map((name) => {
-                return <Block name={name} data={entities[name]} />
+                return <Block key={name} name={name} data={entities[name]} />
             });
             content = (
                 <ul className="blocks__list">

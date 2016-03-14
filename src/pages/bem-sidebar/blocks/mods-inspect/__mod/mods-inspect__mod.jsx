@@ -107,6 +107,7 @@ class Mod extends React.Component {
         var fields = ['name', 'value'].map((fieldName) => {
             if (self.state.edit === fieldName) {
                 return <input
+                    key="edit"
                     className="block__mod-edit"
                     value={mod[fieldName]}
                     readOnly={!self.state.editable}
@@ -118,6 +119,7 @@ class Mod extends React.Component {
                 />
             } else {
                 return <span
+                    key={"view-" + fieldName}
                     tabIndex="0"
                     onFocus={self.labelFocus.bind(self, fieldName)}
                     className={"block__mod-" + fieldName}

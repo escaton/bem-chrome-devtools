@@ -17,6 +17,5 @@ gulp watch
 ####TODO
  - edit mods for elems
  - toggle mods
- - deal with react warnings
  - fallback if no BEM.INTERNAL constants
 
