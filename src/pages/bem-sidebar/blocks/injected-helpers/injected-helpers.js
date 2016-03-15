@@ -1,6 +1,7 @@
 'use strict';
 
 export function extractMods(elem, name) {
+    var BEM = elem.ownerDocument.defaultView.BEM;
     var res = {};
     var MOD_DELIM = BEM.INTERNAL.MOD_DELIM;
     var NAME_PATTERN = BEM.INTERNAL.NAME_PATTERN;
@@ -27,12 +28,12 @@ export function extractMods(elem, name) {
 
 export function getEntities() {
 
+    var self = this; // window[NAMESPACE]
+    var el = $0;
+    var BEM = el.ownerDocument.defaultView.BEM;
     if (!BEM) {
         throw new Error('No BEM on page');
     }
-
-    var self = this; // window[NAMESPACE]
-    var el = $0;
     var NAME_PATTERN = BEM.INTERNAL.NAME_PATTERN;
     var ELEM_DELIM = BEM.INTERNAL.ELEM_DELIM;
     var blockRegex = new RegExp('^' + NAME_PATTERN + '$');
@@ -78,6 +79,7 @@ export function getEntities() {
 
 export function modAdd(owner, mod, originalMod) {
     var el = $0;
+    var BEM = el.ownerDocument.defaultView.BEM;
     var classList = el.classList;
     var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
     var isElInited = classList.contains(elInitedClass);
@@ -107,6 +109,7 @@ export function modAdd(owner, mod, originalMod) {
 
 export function modRemove(owner, mod, originalMod) {
     var el = $0;
+    var BEM = el.ownerDocument.defaultView.BEM;
     var classList = el.classList;
     var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
     var isElInited = classList.contains(elInitedClass);
