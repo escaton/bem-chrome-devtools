@@ -37,7 +37,7 @@ export function getEntities() {
     var ELEM_DELIM = BEM.INTERNAL.ELEM_DELIM;
     var blockRegex = new RegExp('^' + NAME_PATTERN + '$');
     var elemRegex = new RegExp('^(' + NAME_PATTERN + ')' + ELEM_DELIM + '(' + NAME_PATTERN + ')$');
-    var classes = Array.prototype.slice.call(el.classList, 0);
+    var classes = Array.prototype.slice.call(el.classList || [], 0);
     var res = {
         entities: {}
     };
