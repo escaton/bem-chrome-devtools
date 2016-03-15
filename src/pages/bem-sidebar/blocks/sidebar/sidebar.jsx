@@ -74,6 +74,9 @@ class App extends React.Component {
             case 'mod-remove':
                 self.modRemove(data);
                 break;
+            case 'inspect-parent':
+                self.inspectParent(data);
+                break;
             default:
         }
     }
@@ -88,6 +91,14 @@ class App extends React.Component {
     modRemove({owner, mod, originalMod}) {
         var self = this;
         self.evalHelper.executeFunction('modRemove', [owner, mod, originalMod], (result, error) => {
+            if (error) {
+                console.error(error);
+            }
+        });
+    }
+    inspectParent({block, elem}) {
+        var self = this;
+        self.evalHelper.executeFunction('inspectParent', [block, elem], (result, error) => {
             if (error) {
                 console.error(error);
             }
@@ -121,6 +132,9 @@ class App extends React.Component {
             }, {
                 name: 'modRemove',
                 string: injectedHelpers.modRemove.toString()
+            }, {
+                name: 'inspectParent',
+                string: injectedHelpers.inspectParent.toString()
             }], (result, error) => {
                 if (error) {
                     console.error(error);
@@ -161,7 +175,7 @@ class App extends React.Component {
         var entities = this.state.entities;
         var entityNames = Object.keys(entities);
         var content;
-        if (entities && entityNames.length) {
+        if (entityNames.length) {
             var list = entityNames.map((name) => {
                 return <Block key={name} name={name} data={entities[name]} />
             });

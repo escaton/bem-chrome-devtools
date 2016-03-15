@@ -62,6 +62,13 @@ export function getEntities() {
                 elem: parts[2],
                 mods: mods
             }
+            var parentBlock = el.closest('.' + BEM.INTERNAL.buildClass(parts[1]));
+            if (parentBlock) {
+                res.entities[className].parent = {
+                    tag: parentBlock.tagName,
+                    class: parentBlock.className
+                }
+            }
         }
     });
     var bemData = el.dataset && el.dataset.bem;
@@ -118,5 +125,13 @@ export function modRemove(owner, mod, originalMod) {
     } else {
         var deleteClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, originalMod.name, originalMod.value);
         classList.remove(deleteClass);
+    }
+}
+
+export function inspectParent(block, elem) {
+    var el = $0;
+    var parent = el.closest('.' + BEM.INTERNAL.buildClass(block));
+    if (parent) {
+        inspect(parent);
     }
 }
