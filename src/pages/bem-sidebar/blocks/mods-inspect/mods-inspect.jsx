@@ -12,7 +12,7 @@ class ModsInspect extends React.Component {
             mods.push({
                 name: name,
                 value: props.mods[name]
-            })
+            });
         });
         this.state = {
             mods: mods,
@@ -25,7 +25,7 @@ class ModsInspect extends React.Component {
             mods.push({
                 name: name,
                 value: nextProps.mods[name]
-            })
+            });
         });
         this.setState({
             mods: mods
@@ -33,13 +33,17 @@ class ModsInspect extends React.Component {
     }
     addMod() {
         this.setState((state) => {
-            state.mods.push({});
+            state.newMod = true;
             return state;
         });
     }
-    removeMod(modIndex) {
+    removeMod(modIndex, newMod) {
         this.setState((state) => {
-            delete state.mods[modIndex];
+            if (newMod) {
+                delete state.newMod;
+            } else {
+                delete state.mods[modIndex];
+            }
             return state;
         });
     }
@@ -47,12 +51,16 @@ class ModsInspect extends React.Component {
         var self = this;
         var mods = self.state.mods;
         var content;
+        var newMod;
         if (mods.length) {
             content = mods.map((mod, modIndex) => {
                 return (
-                    <Mod key={mod.name + '_' + mod.val} mod={mod} owner={self.props.owner} removeMod={self.removeMod.bind(self, modIndex)}/>
+                    <Mod key={mod.name + '_' + mod.value} mod={mod} owner={self.props.owner} removeMod={self.removeMod.bind(self, modIndex)}/>
                 )
             });
+        }
+        if (self.state.newMod) {
+            newMod = <Mod mod={{}} newMod={true} owner={self.props.owner} removeMod={self.removeMod.bind(self, null, true)}/>
         }
         return (
             <div className="block__mods">
@@ -62,7 +70,9 @@ class ModsInspect extends React.Component {
                 </div>
                 <ul className="block__mods-list">
                     {content}
+                    {newMod}
                 </ul>
+                <i tabIndex="0" onFocus={self.state.editable ? self.addMod.bind(self) : undefined}></i>
             </div>
         );
     }

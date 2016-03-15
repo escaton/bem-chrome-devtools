@@ -89,7 +89,7 @@ export function modAdd(owner, mod, originalMod) {
         block.setMod(mod.name, mod.value);
     } else {
         var maskToRemove = [BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, '.+')];
-        if (originalMod && (originalMod.name !== mod.name)) {
+        if (originalMod && originalMod.name && (originalMod.name !== mod.name)) {
             maskToRemove.push(BEM.INTERNAL.buildClass(owner.block, owner.elem, originalMod.name, '.+'))
         }
         var regexToRemove = new RegExp('^(' + maskToRemove.join('|') + ')$');
