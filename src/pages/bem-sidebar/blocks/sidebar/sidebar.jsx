@@ -127,7 +127,8 @@ class App extends React.Component {
                 } else {
                     self.evalHelper = helper;
                     self.backgroundPageConnection.postMessage({
-                        cmd: 'inject-content-script'
+                        cmd: 'inject-content-script',
+                        tabId: chrome.devtools.inspectedWindow.tabId
                     });
                 }
             });
