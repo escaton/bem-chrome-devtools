@@ -8,8 +8,7 @@ class Mod extends React.Component {
         super(props);
         this.state = {
             mod: Object.assign({}, props.mod),
-            edit: props.newMod && 'name',
-            editable: !props.owner.elem // TEMPORARY
+            edit: props.newMod && 'name'
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -130,7 +129,6 @@ class Mod extends React.Component {
                     ref="input"
                     className="block__mod-edit"
                     value={mod[fieldName]}
-                    readOnly={!self.state.editable}
                     onChange={self.modChange.bind(self, fieldName)}
                     autoFocus={true}
                     onKeyDown={self.modKeyDown.bind(self)}

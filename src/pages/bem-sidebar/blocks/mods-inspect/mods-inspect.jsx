@@ -15,8 +15,7 @@ class ModsInspect extends React.Component {
             });
         });
         this.state = {
-            mods: mods,
-            editable: !this.props.owner.elem
+            mods: mods
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -66,13 +65,13 @@ class ModsInspect extends React.Component {
             <div className="block__mods">
                 <div className="block__title">
                     Mods
-                    {self.state.editable ? <span className="block__mods-add" onClick={self.addMod.bind(self)}></span> : false}
+                    <span className="block__mods-add" onClick={self.addMod.bind(self)}></span>
                 </div>
                 <ul className="block__mods-list">
                     {content}
                     {newMod}
                 </ul>
-                <i tabIndex="0" onFocus={self.state.editable ? self.addMod.bind(self) : undefined}></i>
+                <i tabIndex="0" onFocus={self.addMod.bind(self)}></i>
             </div>
         );
     }

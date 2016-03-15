@@ -135,6 +135,9 @@ class App extends React.Component {
             }, {
                 name: 'inspectParent',
                 string: injectedHelpers.inspectParent.toString()
+            }, {
+                name: 'findParent',
+                string: injectedHelpers.findParent.toString()
             }], (result, error) => {
                 if (error) {
                     console.error(error);

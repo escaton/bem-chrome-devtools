@@ -87,16 +87,25 @@ export function getEntities() {
 export function modAdd(owner, mod, originalMod) {
     var el = $0;
     var BEM = el.ownerDocument.defaultView.BEM;
-    var classList = el.classList;
-    var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
-    var isElInited = classList.contains(elInitedClass);
-    if (isElInited) {
-        var block = $(el).bem(owner.block);
-        if (originalMod && (originalMod.name !== mod.name)) {
-            block.delMod(originalMod.name);
+    var isElem = !!owner.elem;
+    var parent = isElem && this.findParent(el, owner.block, owner.elem);
+    var blockInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
+    if ((isElem && parent && parent.classList.contains(blockInitedClass)) || el.classList.contains(blockInitedClass)) {
+        if (isElem) {
+            var block = $(parent).bem(owner.block);
+            if (originalMod && (originalMod.name !== mod.name)) {
+                block.delMod($(el), originalMod.name);
+            }
+            block.setMod($(el), mod.name, mod.value);
+        } else {
+            var block = $(el).bem(owner.block);
+            if (originalMod && (originalMod.name !== mod.name)) {
+                block.delMod(originalMod.name);
+            }
+            block.setMod(mod.name, mod.value);
         }
-        block.setMod(mod.name, mod.value);
     } else {
+        var classList = el.classList;
         var maskToRemove = [BEM.INTERNAL.buildClass(owner.block, owner.elem, mod.name, '.+')];
         if (originalMod && originalMod.name && (originalMod.name !== mod.name)) {
             maskToRemove.push(BEM.INTERNAL.buildClass(owner.block, owner.elem, originalMod.name, '.+'))
@@ -117,20 +126,30 @@ export function modAdd(owner, mod, originalMod) {
 export function modRemove(owner, mod, originalMod) {
     var el = $0;
     var BEM = el.ownerDocument.defaultView.BEM;
-    var classList = el.classList;
-    var elInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
-    var isElInited = classList.contains(elInitedClass);
-    if (isElInited) {
-        $(el).bem(owner.block).delMod(originalMod.name);
+    var isElem = !!owner.elem;
+    var parent = isElem && this.findParent(el, owner.block, owner.elem);
+    var blockInitedClass = BEM.INTERNAL.buildClass(owner.block, 'js', 'inited');
+    if ((isElem && parent && parent.classList.contains(blockInitedClass)) || el.classList.contains(blockInitedClass)) {
+        if (isElem) {
+            $(parent).bem(owner.block).delMod($(el), originalMod.name);
+        } else {
+            $(el).bem(owner.block).delMod(originalMod.name);
+        }
     } else {
+        var classList = el.classList;
         var deleteClass = BEM.INTERNAL.buildClass(owner.block, owner.elem, originalMod.name, originalMod.value);
         classList.remove(deleteClass);
     }
 }
 
+export function findParent(el, block, elem) {
+    var parent = el.closest('.' + BEM.INTERNAL.buildClass(block));
+    return parent;
+}
+
 export function inspectParent(block, elem) {
     var el = $0;
-    var parent = el.closest('.' + BEM.INTERNAL.buildClass(block));
+    var parent = this.findParent(el, block, elem);
     if (parent) {
         inspect(parent);
     }
