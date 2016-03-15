@@ -4,7 +4,7 @@ Lets you inspect blocks and elems through `mods` and `js params`
 
 [Chrome Store](https://chrome.google.com/webstore/detail/bem-devtools/phioabmfljcmdaiiibdhecmbpaikafnl)
 
-Feedback wanted! Please feel free to [create issues](/issues/new)
+Feedback wanted! Please feel free to [create issues](../../issues/new)
 
 ####Start
 ```
