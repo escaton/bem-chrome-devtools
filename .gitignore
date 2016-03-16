@@ -3,6 +3,7 @@
 .DS_Store
 npm-debug.log
 
+auth.json
 node_modules
 dist
 src/pages/*/*.bundle.js

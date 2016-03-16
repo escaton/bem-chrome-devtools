@@ -7,6 +7,7 @@ var gutil = require('gulp-util');
 var bump = require('gulp-bump');
 var zip = require('gulp-zip');
 var git = require('gulp-git');
+var ghRelease = require('gulp-github-release');
 var crx = require('gulp-crx-pack');
 var glob = require('glob');
 var rename = require('gulp-rename');
@@ -128,12 +129,12 @@ gulp.task('commit-release', function() {
 });
 
 gulp.task('tag-release', ['commit-release'], function() {
-    var version = require('./src/manifest').version;
-    return git.tag('v' + version, 'Release ' + version, function (err) {
+    var manifest = require('./src/manifest');
+    return git.tag('v' + manifest.version, 'Release ' + manifest.version, function (err) {
         if (err) {
             throw err;
         } else {
-            gutil.log('Create tag v' + version);
+            gutil.log('Create tag v' + manifest.version);
         }
     });
 });
@@ -144,4 +145,17 @@ gulp.task('push-release', ['tag-release'], function() {
             throw err;
         }
     });
+});
+
+gulp.task('release', ['tag-release', 'crx'], function() {
+    var manifest = require('./src/manifest');
+    var version = manifest.version;
+    return gulp.src('./dist/' + manifest.name + '-' + manifest.version + '.crx')
+        .pipe(ghRelease({
+            token: require('./auth').ghToken,
+            name: 'Release ' + version,
+            notes: '',
+            draft: true,
+            manifest: manifest
+        }));
 });
