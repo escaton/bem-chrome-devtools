@@ -11,6 +11,7 @@ var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var watchify = require('watchify');
 var es = require('event-stream');
+var git = require('gulp-git');
 var minimist = require('minimist');
 var options = minimist(process.argv.slice(2));
 var production = process.env.NODE_ENV === 'production';
@@ -103,4 +104,31 @@ gulp.task('dist', function() {
         ])
         .pipe(zip('bem-devtools-' + version + '.zip'))
         .pipe(gulp.dest('dist'));
+});
+
+gulp.task('commit-release', function() {
+    return gulp
+        .src(['./package.json', './src/manifest.json'], {
+            base: '.'
+        })
+        .pipe(git.commit('release'));
+});
+
+gulp.task('tag-release', ['commit-release'], function() {
+    var version = require('./src/manifest').version;
+    return git.tag('v' + version, 'Release ' + version, function (err) {
+        if (err) {
+            throw err;
+        } else {
+            gutil.log('Create tag v' + version);
+        }
+    });
+});
+
+gulp.task('push-release', ['tag-release'], function() {
+    return git.push('origin', 'master', { args: ' --tags'}, function (err) {
+        if (err) {
+            throw err;
+        }
+    });
 });
