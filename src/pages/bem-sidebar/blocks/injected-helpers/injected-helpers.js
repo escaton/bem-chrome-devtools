@@ -2,8 +2,8 @@
 
 export function extractInternal(el) {
     var win = el.ownerDocument.defaultView;
-    var BEM = win.BEM;
     var $ = win.$ || win.jQuery
+    var BEM = $.fn.bem && $('<i>').bem(NAMESPACE).constructor;
     if (!BEM) {
         throw new Error('no BEM');
     }
