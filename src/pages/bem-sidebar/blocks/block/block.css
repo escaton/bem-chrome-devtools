@@ -57,16 +57,10 @@
     opacity: 0.5;
 }
 
-.block__parent {
-    float: right;
-    white-space: nowrap;
-    max-width: 40%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.block__name-block.block__attr {
+    margin-right: 2px;
+    margin-left: -5px;
     cursor: pointer;
-}
-
-.block__parent-tag {
     color: rgb(136, 18, 128);
 }
 
