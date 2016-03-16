@@ -1,17 +1,19 @@
 'use strict';
 
 var path = require('path');
+var fs = require('fs');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var bump = require('gulp-bump');
 var zip = require('gulp-zip');
+var git = require('gulp-git');
+var crx = require('gulp-crx-pack');
 var glob = require('glob');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var watchify = require('watchify');
 var es = require('event-stream');
-var git = require('gulp-git');
 var minimist = require('minimist');
 var options = minimist(process.argv.slice(2));
 var production = process.env.NODE_ENV === 'production';
@@ -95,14 +97,25 @@ gulp.task('bump', function() {
         .pipe(gulp.dest('./'));
 });
 
+gulp.task('crx', function() {
+    var keyPath = path.join(process.env.HOME, '.keys', 'bem-chrome-devtools.pem');
+    var manifest = require('./src/manifest.json');
+    return gulp.src('./src')
+        .pipe(crx({
+            privateKey: fs.readFileSync(keyPath, 'utf8'),
+            filename: manifest.name + '-' + manifest.version + '.crx'
+        }))
+        .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('dist', function() {
     var keyPath = path.join(process.env.HOME, '.keys', 'bem-chrome-devtools.pem');
-    var version = require('./src/manifest').version;
+    var manifest = require('./src/manifest');
     return es.merge([
             gulp.src('src/**'),
             gulp.src(keyPath).pipe(rename('key.pem'))
         ])
-        .pipe(zip('bem-devtools-' + version + '.zip'))
+        .pipe(zip(manifest.name + '-' + manifest.version + '.zip'))
         .pipe(gulp.dest('dist'));
 });
 
