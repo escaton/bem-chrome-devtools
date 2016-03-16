@@ -59,7 +59,14 @@ class ModsInspect extends React.Component {
             });
         }
         if (self.state.newMod) {
-            newMod = <Mod mod={{}} newMod={true} owner={self.props.owner} removeMod={self.removeMod.bind(self, null, true)}/>
+            newMod = (
+                <Mod
+                    mod={{}}
+                    newMod={true}
+                    owner={self.props.owner}
+                    removeMod={self.removeMod.bind(self, null, true)}
+                />
+            );
         }
         return (
             <div className="block__mods">

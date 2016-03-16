@@ -64,23 +64,26 @@ class Mod extends React.Component {
         var self = this;
         var originalValue = self.props.mod[fieldName];
         var value = self.state.mod[fieldName];
-        self.setState({
-            edit: undefined
-        });
-        if (!value) {
-            self.props.removeMod();
-            !self.props.newMod && self.commit('remove');
-        } else if (self.checkChanges()) {
-            var span = ReactDOM.findDOMNode(self.refs.span);
-            if (span !== e.relatedTarget) {
+        var nextSpan = ReactDOM.findDOMNode(self.refs['view-' + (fieldName === 'name' ? 'value' : 'name')]);
+        var input = ReactDOM.findDOMNode(self.refs.input);
+        if (nextSpan !== e.relatedTarget) {
+            if (self.checkChanges()) {
                 if (self.checkValid()) {
                     self.commit('add');
                 } else {
                     self.props.removeMod();
                     !self.props.newMod && self.commit('remove');
                 }
+            } else {
+                if (self.props.newMod) {
+                    input.focus();
+                    self.props.removeMod();
+                }
             }
         }
+        self.setState({
+            edit: undefined
+        });
     }
     modKeyDown(e) {
         var self = this;
@@ -114,7 +117,12 @@ class Mod extends React.Component {
             });
         } else if (value === '') {
             self.setState((state) => {
-                state.mod[fieldName] = undefined;
+                state.mod[fieldName] = '';
+                return state;
+            });
+        } else {
+            self.setState((state) => {
+                state.mod[fieldName] = state.mod[fieldName] || '';
                 return state;
             });
         }
@@ -125,8 +133,8 @@ class Mod extends React.Component {
         var fields = ['name', 'value'].map((fieldName) => {
             if (self.state.edit === fieldName) {
                 return <input
-                    key="edit"
                     ref="input"
+                    key="edit"
                     className="block__mod-edit"
                     value={mod[fieldName]}
                     onChange={self.modChange.bind(self, fieldName)}
@@ -137,7 +145,7 @@ class Mod extends React.Component {
                 />
             } else {
                 return <span
-                    ref="span"
+                    ref={"view-" + fieldName}
                     key={"view-" + fieldName}
                     tabIndex="0"
                     onFocus={self.labelFocus.bind(self, fieldName)}
