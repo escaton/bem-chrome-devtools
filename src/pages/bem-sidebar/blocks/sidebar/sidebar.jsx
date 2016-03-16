@@ -124,6 +124,9 @@ class App extends React.Component {
                 name: 'getEntities',
                 string: injectedHelpers.getEntities.toString()
             }, {
+                name: 'extractInternal',
+                string: injectedHelpers.extractInternal.toString()
+            }, {
                 name: 'extractMods',
                 string: injectedHelpers.extractMods.toString()
             }, {
