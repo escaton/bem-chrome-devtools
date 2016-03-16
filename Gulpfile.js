@@ -149,6 +149,7 @@ gulp.task('push-release', ['tag-release'], function() {
 
 gulp.task('release', ['tag-release', 'crx'], function() {
     var manifest = require('./src/manifest');
+    var packageJson = require('./package');
     var version = manifest.version;
     return gulp.src('./dist/' + manifest.name + '-' + manifest.version + '.crx')
         .pipe(ghRelease({
@@ -156,6 +157,6 @@ gulp.task('release', ['tag-release', 'crx'], function() {
             name: 'Release ' + version,
             notes: '',
             draft: true,
-            manifest: manifest
+            manifest: packageJson
         }));
 });
