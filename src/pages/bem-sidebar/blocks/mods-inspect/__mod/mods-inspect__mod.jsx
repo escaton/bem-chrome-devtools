@@ -110,7 +110,12 @@ class Mod extends React.Component {
     modChange(fieldName, e) {
         var self = this;
         var value = e.target.value;
-        if (/^[a-zA-Z0-9-]+$/.test(value)) {
+        if (value === 'true') {
+            self.setState((state) => {
+                state.mod[fieldName] = true;
+                return state;
+            });
+        } else if (/^[a-zA-Z0-9-]+$/.test(value)) {
             self.setState((state) => {
                 state.mod[fieldName] = value;
                 return state;
