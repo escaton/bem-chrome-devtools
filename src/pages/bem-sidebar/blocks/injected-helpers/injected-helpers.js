@@ -47,20 +47,13 @@ export function extractMods(elem, name) {
     var regexp = new RegExp([
             '(\\s|^)',
             name,
-            MOD_DELIM,
-            '(',
-            NAME_PATTERN,
-            ')',
-            MOD_DELIM,
-            '(',
-            NAME_PATTERN,
-            ')(?=\\s|$)'
+            MOD_DELIM, '(', NAME_PATTERN, ')',
+            '(?:', MOD_DELIM, '(', NAME_PATTERN, '))?(?=\\s|$)'
         ].join(''), 'g');
 
     (elem.className.match(regexp) || []).forEach((className) => {
-        var iModVal = (className = className.trim()).lastIndexOf(MOD_DELIM),
-            iModName = className.substr(0, iModVal - 1).lastIndexOf(MOD_DELIM);
-        res[className.substr(iModName + 1, iModVal - iModName - 1)] = className.substr(iModVal + 1);
+        var parts = className.split(MOD_DELIM);
+        res[parts[1]] = parts[2] || 'true';
     });
     return res;
 }
